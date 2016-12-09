@@ -1,6 +1,8 @@
 package mk.klikniobrok.services.impl;
 
+import mk.klikniobrok.models.Customer;
 import mk.klikniobrok.models.User;
+import mk.klikniobrok.repositories.CustomerRepository;
 import mk.klikniobrok.repositories.UserRepository;
 import mk.klikniobrok.services.SecurityService;
 import mk.klikniobrok.services.UserService;
@@ -17,24 +19,33 @@ import java.sql.Timestamp;
 @Service
 public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
-
+    private CustomerRepository customerRepository;
     private SecurityService securityService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, SecurityService securityService) {
+    public UserServiceImpl(UserRepository userRepository, CustomerRepository customerRepository, SecurityService securityService) {
         if(userRepository == null) {
             throw new IllegalArgumentException(UserRepository.class.getName() + " cannot be null.");
         }
         if(securityService == null) {
             throw new IllegalArgumentException(SecurityService.class.getName() + " cannot be null.");
         }
+        if(customerRepository == null) {
+            throw new IllegalArgumentException(CustomerRepository.class.getName() + " cannot be null.");
+        }
         this.userRepository = userRepository;
+        this.customerRepository = customerRepository;
         this.securityService = securityService;
     }
 
     @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public User getUserDetails(String username) {
+        return customerRepository.findByUsername(username);
     }
 
     @Override
@@ -46,7 +57,7 @@ public class UserServiceImpl implements UserService {
         user.setDateCreated(new Timestamp(System.currentTimeMillis()));
         user.setLastUsed(new Timestamp(System.currentTimeMillis()));
         user.setPassword(securityService.hashPassword(user.getPassword(), securityService.generateRandomSalt()));
-        userRepository.save(user);
-        return userRepository.findByUsername(user.getUsername());
+        customerRepository.save((Customer) user);
+        return customerRepository.findByUsername(user.getUsername());
     }
 }

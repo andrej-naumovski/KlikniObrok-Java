@@ -1,6 +1,10 @@
 package mk.klikniobrok.services.impl;
 
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.impl.crypto.MacProvider;
+import mk.klikniobrok.models.Customer;
 import mk.klikniobrok.models.JwtResponse;
 import mk.klikniobrok.models.ResponseStatus;
 import mk.klikniobrok.models.User;
@@ -9,8 +13,10 @@ import mk.klikniobrok.services.SecurityService;
 import mk.klikniobrok.services.UserService;
 import org.apache.log4j.spi.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.security.Key;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,7 +29,7 @@ import java.util.logging.Logger;
 public class AuthenticationServiceImpl implements AuthenticationService {
     private SecurityService securityService;
     private UserService userService;
-    private Logger logger = Logger.getLogger("AuthenticationServiceImpl");
+    private Key key = MacProvider.generateKey();
 
     @Autowired
     public AuthenticationServiceImpl(SecurityService securityService, UserService userService) {
@@ -51,6 +57,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         .claim("user", user)
                         .setSubject(user.getUsername())
                         .setIssuedAt(new Date())
+                        .signWith(SignatureAlgorithm.HS256, key)
                         .compact();
                 response.setToken(token);
                 response.setResponseStatus(ResponseStatus.SUCCESS);
@@ -62,6 +69,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public User registerUser(User user) {
         return userService.registerUser(user);
+    }
+
+    @Override
+    public User authenticateUser(String jwtToken) {
+        User user;
+        try {
+            String username = Jwts.parser().setSigningKey(key).parseClaimsJws(jwtToken).getBody().getSubject();
+            user = userService.getUserDetails(username);
+        } catch(SignatureException e) {
+            return null;
+        }
+        return user;
     }
 }
 

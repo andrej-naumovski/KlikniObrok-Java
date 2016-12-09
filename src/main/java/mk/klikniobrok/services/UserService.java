@@ -1,5 +1,6 @@
 package mk.klikniobrok.services;
 
+import mk.klikniobrok.models.Customer;
 import mk.klikniobrok.models.User;
 
 /**
@@ -8,4 +9,5 @@ import mk.klikniobrok.models.User;
 public interface UserService {
     User findByUsername(String username);
     User registerUser(User user);
+    User getUserDetails(String username);
 }

@@ -1,5 +1,6 @@
 package mk.klikniobrok.services;
 
+import mk.klikniobrok.models.Customer;
 import mk.klikniobrok.models.JwtResponse;
 import mk.klikniobrok.models.User;
 
@@ -9,4 +10,5 @@ import mk.klikniobrok.models.User;
 public interface AuthenticationService {
     JwtResponse login(String username, String password);
     User registerUser(User user);
+    User authenticateUser(String jwtToken);
 }

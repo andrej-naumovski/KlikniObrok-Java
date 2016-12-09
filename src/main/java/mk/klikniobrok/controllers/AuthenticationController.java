@@ -41,7 +41,7 @@ public class AuthenticationController {
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ResponseEntity register(@RequestBody User user) {
+    public ResponseEntity register(@RequestBody Customer user) {
         ResponseEntity responseEntity;
         User registeredUser = authenticationService.registerUser(user);
         if(registeredUser != null) {
