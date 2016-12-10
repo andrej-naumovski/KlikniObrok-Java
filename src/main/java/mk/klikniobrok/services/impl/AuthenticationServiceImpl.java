@@ -1,6 +1,7 @@
 package mk.klikniobrok.services.impl;
 
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.impl.crypto.MacProvider;
@@ -71,8 +72,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return userService.registerUser(user);
     }
 
-    @Override
-    public User authenticateUser(String jwtToken) {
+    private User authenticateUser(String jwtToken) {
         User user;
         try {
             String username = Jwts.parser().setSigningKey(key).parseClaimsJws(jwtToken).getBody().getSubject();
@@ -81,6 +81,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return null;
         }
         return user;
+    }
+
+    @Override
+    public boolean isUserValid(String token) {
+        User user;
+        try {
+            user = authenticateUser(token);
+        } catch (MalformedJwtException exception) {
+            return false;
+        }
+        return user != null;
     }
 }
 

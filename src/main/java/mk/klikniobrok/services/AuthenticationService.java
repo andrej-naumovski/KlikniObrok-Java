@@ -10,5 +10,5 @@ import mk.klikniobrok.models.User;
 public interface AuthenticationService {
     JwtResponse login(String username, String password);
     User registerUser(User user);
-    User authenticateUser(String jwtToken);
+    boolean isUserValid(String token);
 }

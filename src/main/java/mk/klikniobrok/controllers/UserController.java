@@ -1,5 +1,6 @@
 package mk.klikniobrok.controllers;
 
+import io.jsonwebtoken.MalformedJwtException;
 import mk.klikniobrok.models.Customer;
 import mk.klikniobrok.models.User;
 import mk.klikniobrok.services.AuthenticationService;
@@ -33,13 +34,19 @@ public class UserController {
     }
 
     @RequestMapping(value = "/{username}", method = RequestMethod.GET)
-    public ResponseEntity getUserDetails(@PathVariable String username) {
-//        String jwtToken = authorizationHeader.split(" ")[1];
-//        User user = authenticationService.authenticateUser(jwtToken);
-//        if(user == null) {
-//            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
-//        }
-        Customer customer = (Customer) userService.getUserDetails(username);
-        return new ResponseEntity<Customer>(customer, HttpStatus.OK);
+    public ResponseEntity getUserDetails(
+            @RequestHeader(value = "Authorization") String authorizationHeader,
+            @PathVariable String username
+    ) {
+        String jwtToken = authorizationHeader.split(" ")[1];
+        User user;
+        if(!authenticationService.isUserValid(jwtToken)) {
+            return new ResponseEntity<String>("Unauthorized, access denied.", HttpStatus.UNAUTHORIZED);
+        }
+        User foundUser = userService.getUserDetails(username);
+        if(foundUser == null) {
+            return new ResponseEntity<String>("User does not exist.", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<User>(foundUser, HttpStatus.OK);
     }
 }
