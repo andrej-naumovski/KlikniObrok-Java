@@ -48,6 +48,14 @@ public class UserServiceImpl implements UserService {
         return customerRepository.findByUsername(username);
     }
 
+
+    /*
+     * Registers a new user, sets its dateCreated and lastUsed
+     * properties to current time, hashes password using the securityService service,
+     * and stores it in database.
+     * @param user: User - The user to be registered.
+     * @return User - The newly generated user, with proper dates and ID.
+     */
     @Override
     public User registerUser(User user) {
         boolean alreadyExists = userRepository.findByUsername(user.getUsername()) != null;

@@ -44,6 +44,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         this.userService = userService;
     }
 
+
+    /*
+     * Checks if username and password are valid
+     * and returns a JWT Token for the specific user.
+     *
+     * @return response: JwtResponse - A wrapper object for the
+     * JWT token, contains the token and the operation's status.
+     *
+     * @note Should reimplement with Spring Security?
+     */
     @Override
     public JwtResponse login(String username, String password) {
         User user = userService.findByUsername(username);
@@ -72,6 +82,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return userService.registerUser(user);
     }
 
+    /*
+     * Tries to decode the JWT token and returns the
+     * user associated with it.
+     *
+     * @param jwtToken: String - the request JWT token
+     * @return user: User - returns the user if token is valid, else returns null
+     */
     private User authenticateUser(String jwtToken) {
         User user;
         try {
@@ -83,6 +100,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return user;
     }
 
+    /*
+     * Checks if the JWT token comes from a valid user.
+     *
+     * @param token: String - The request JWT token.
+     * @return boolean - returns true if token
+     * contains valid user info, false otherwise.
+     */
     @Override
     public boolean isUserValid(String token) {
         User user;

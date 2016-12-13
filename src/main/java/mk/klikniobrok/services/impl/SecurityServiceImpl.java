@@ -17,6 +17,14 @@ import java.util.Random;
 
 @Service
 public class SecurityServiceImpl implements SecurityService {
+
+    /*
+     * Hashes password in SHA-256 using provided salt.
+     * Returns hash in format hash.salt
+     * @param original: String - The original password to be hashed.
+     * @param salt: String - The salt to use during hashing.
+     * @return hashToStore: String - The hashed password in the above given format.
+     */
     @Override
     public String hashPassword(String original, String salt) {
         String hashToStore = null;
@@ -30,6 +38,11 @@ public class SecurityServiceImpl implements SecurityService {
         return hashToStore;
     }
 
+    /*
+     * Generates a random salt for every new password
+     * using a SecureRandom genrator.
+     * @return salt: String - A base-64 encoded 16-bit salt.
+     */
     @Override
     public String generateRandomSalt() {
         final Random randomGen = new SecureRandom();
