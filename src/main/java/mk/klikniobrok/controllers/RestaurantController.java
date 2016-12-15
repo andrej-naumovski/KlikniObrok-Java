@@ -46,7 +46,7 @@ public class RestaurantController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity getRestaurantById(
-            @RequestHeader String authorizationHeader,
+            @RequestHeader(name = "Authorization") String authorizationHeader,
             @PathVariable Long id
     ) {
         if(!authenticationService.isUserValid(authorizationHeader.split(" ")[1])) {
