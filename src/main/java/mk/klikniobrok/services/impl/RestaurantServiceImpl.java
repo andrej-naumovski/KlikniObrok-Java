@@ -1,6 +1,5 @@
 package mk.klikniobrok.services.impl;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
 import mk.klikniobrok.models.Restaurant;
 import mk.klikniobrok.repositories.RestaurantRepository;
 import mk.klikniobrok.services.RestaurantService;
