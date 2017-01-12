@@ -65,6 +65,7 @@ public class UserServiceImpl implements UserService {
         user.setDateCreated(new Timestamp(System.currentTimeMillis()));
         user.setLastUsed(new Timestamp(System.currentTimeMillis()));
         user.setPassword(securityService.hashPassword(user.getPassword(), securityService.generateRandomSalt()));
+        user.setEnabled(1);
         customerRepository.save((Customer) user);
         return customerRepository.findByUsername(user.getUsername());
     }

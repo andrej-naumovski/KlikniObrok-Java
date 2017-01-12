@@ -37,14 +37,13 @@ public class User {
     public User(
             String username,
             String password,
-            int enabled,
             java.util.Date dateCreated,
             java.util.Date lastUsed,
             Role role
     ) {
         this.username = username;
         this.password = password;
-        this.enabled = enabled;
+        this.enabled = 1;
         this.dateCreated = dateCreated;
         this.lastUsed = lastUsed;
         this.role = role;
@@ -68,7 +67,7 @@ public class User {
         this.password = password;
     }
 
-    public int isEnabled() {
+    public int getEnabled() {
         return enabled;
     }
 
@@ -77,6 +76,7 @@ public class User {
     }
 
     @Column(name = "date_created")
+    @JsonIgnore
     public java.util.Date getDateCreated() {
         return dateCreated;
     }
@@ -86,6 +86,7 @@ public class User {
     }
 
     @Column(name = "last_used")
+    @JsonIgnore
     public java.util.Date getLastUsed() {
         return lastUsed;
     }
@@ -94,10 +95,12 @@ public class User {
         this.lastUsed = lastUsed;
     }
 
+    @JsonIgnore
     public Role getRole() {
         return role;
     }
 
+    @JsonProperty
     public void setRole(Role role) {
         this.role = role;
     }
