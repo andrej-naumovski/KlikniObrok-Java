@@ -24,7 +24,6 @@ public class Customer extends User {
 
     public Customer(String username,
                     String password,
-                    int enabled,
                     java.util.Date dateCreated,
                     java.util.Date lastUsed,
                     Role role,
@@ -33,7 +32,7 @@ public class Customer extends User {
                     String lastName,
                     String imageUrl
     ) {
-        super(username, password, enabled, dateCreated, lastUsed, role);
+        super(username, password, dateCreated, lastUsed, role);
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;

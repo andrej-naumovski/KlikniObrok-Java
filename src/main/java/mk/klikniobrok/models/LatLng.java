@@ -1,5 +1,7 @@
 package mk.klikniobrok.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 /**
@@ -24,6 +26,7 @@ public class LatLng {
         this.longitude = longitude;
     }
 
+    @JsonIgnore
     public Long getId() {
         return id;
     }
