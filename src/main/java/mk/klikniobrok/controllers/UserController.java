@@ -49,4 +49,13 @@ public class UserController {
         }
         return new ResponseEntity<User>(foundUser, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public ResponseEntity<Boolean> emailExists(@RequestParam String email) {
+        User user = userService.findByEmail(email);
+        if(user == null) {
+            return new ResponseEntity<Boolean>(false, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+    }
 }
