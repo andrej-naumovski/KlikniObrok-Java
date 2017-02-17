@@ -117,5 +117,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
         return user != null;
     }
+
+    @Override
+    public JwtResponse loginFacebook(String email) {
+        User user = userService.findByEmail(email);
+        String token = Jwts
+                .builder()
+                .claim("user", user)
+                .setSubject(user.getUsername())
+                .setIssuedAt(new Date())
+                .signWith(SignatureAlgorithm.HS256, key)
+                .compact();
+        return new JwtResponse(token, ResponseStatus.SUCCESS);
+    }
 }
 

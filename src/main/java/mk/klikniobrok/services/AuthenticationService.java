@@ -11,4 +11,5 @@ public interface AuthenticationService {
     JwtResponse login(String username, String password);
     User registerUser(User user);
     boolean isUserValid(String token);
+    JwtResponse loginFacebook(String email);
 }

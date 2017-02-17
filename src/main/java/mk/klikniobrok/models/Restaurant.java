@@ -21,6 +21,7 @@ public class Restaurant {
     @OneToOne
     @JoinColumn(name = "location_id")
     private LatLng location;
+    private String endpoint;
 
     public Restaurant() {
 
@@ -30,13 +31,15 @@ public class Restaurant {
                       String phone,
                       String email,
                       Address address,
-                      LatLng location
+                      LatLng location,
+                      String endpoint
     ) {
         this.name = name;
         this.phone = phone;
         this.email = email;
         this.address = address;
         this.location = location;
+        this.endpoint = endpoint;
     }
 
     public Long getId() {
@@ -85,5 +88,13 @@ public class Restaurant {
 
     public void setLocation(LatLng location) {
         this.location = location;
+    }
+
+    public String getEndpoint() {
+        return endpoint;
+    }
+
+    public void setEndpoint(String endpoint) {
+        this.endpoint = endpoint;
     }
 }
