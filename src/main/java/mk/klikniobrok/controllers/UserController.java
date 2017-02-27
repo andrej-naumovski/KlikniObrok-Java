@@ -39,8 +39,7 @@ public class UserController {
             @PathVariable String username
     ) {
         String jwtToken = authorizationHeader.split(" ")[1];
-        User user;
-           if(!authenticationService.isUserValid(jwtToken)) {
+        if(!authenticationService.isUserValid(jwtToken)) {
             return new ResponseEntity<String>("Unauthorized, access denied.", HttpStatus.UNAUTHORIZED);
         }
         User foundUser = userService.getUserDetails(username);
@@ -48,5 +47,22 @@ public class UserController {
             return new ResponseEntity<String>("User does not exist.", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<User>(foundUser, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public ResponseEntity getUserDetailsByEmail(
+        @RequestHeader(value = "Authorization") String authorizationHeader,
+        @RequestParam String email
+    ) {
+        String jwtToken = authorizationHeader.split(" ")[1];
+        User user;
+        if(!authenticationService.isUserValid(jwtToken)) {
+            return new ResponseEntity<>("Unauthorized, access denied.", HttpStatus.UNAUTHORIZED);
+        }
+        user = userService.findByEmail(email);
+        if(user == null) {
+            return new ResponseEntity<>("User does not exist.", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 }
