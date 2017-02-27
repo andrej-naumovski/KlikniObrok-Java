@@ -40,7 +40,7 @@ public class UserController {
     ) {
         String jwtToken = authorizationHeader.split(" ")[1];
         User user;
-        if(!authenticationService.isUserValid(jwtToken)) {
+           if(!authenticationService.isUserValid(jwtToken)) {
             return new ResponseEntity<String>("Unauthorized, access denied.", HttpStatus.UNAUTHORIZED);
         }
         User foundUser = userService.getUserDetails(username);

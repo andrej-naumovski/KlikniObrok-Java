@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.xml.ws.Response;
 import java.util.List;
 
 /**
@@ -60,7 +61,7 @@ public class RestaurantController {
         return new ResponseEntity<Restaurant>(restaurantService.findById(id), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}/orders", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}/order", method = RequestMethod.GET)
     public ResponseEntity getOrder(
             @RequestHeader(name = "Authorization") String authorizationHeader,
             @PathVariable Long id,
@@ -77,6 +78,23 @@ public class RestaurantController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/{id}/orders", method = RequestMethod.GET)
+    public ResponseEntity getOrdersByUser(
+            @RequestHeader(name = "Authorization") String authorizationHeader,
+            @PathVariable Long id,
+            @RequestParam String user
+    ) {
+        if(!authenticationService.isUserValid(authorizationHeader.split(" ")[1])) {
+            return new ResponseEntity<>("Unauthorized, access denied.", HttpStatus.UNAUTHORIZED);
+        }
+        Restaurant restaurant = restaurantService.findById(id);
+        if(restaurant == null) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+        String response = restTemplate.getForObject(restaurant.getEndpoint() + "/order?user=" + user, String.class);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/{id}/entry_types", method = RequestMethod.GET)
     public ResponseEntity getEntryTypes(
             @RequestHeader(name = "Authorization") String authorizationHeader,
@@ -90,6 +108,23 @@ public class RestaurantController {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
         String response = restTemplate.getForObject(restaurant.getEndpoint() + "/entry/types/", String.class);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @RequestMapping(value="/{id}/entries", method = RequestMethod.GET)
+    public ResponseEntity getEntriesByType(
+            @RequestHeader(name = "Authorization") String authorizationHeader,
+            @PathVariable Long id,
+            @RequestParam String type
+    ) {
+        if(!authenticationService.isUserValid(authorizationHeader.split(" ")[1])) {
+            return new ResponseEntity<>("Unauthorized, access denied.", HttpStatus.UNAUTHORIZED);
+        }
+        Restaurant restaurant = restaurantService.findById(id);
+        if(restaurant == null) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+        String response = restTemplate.getForObject(restaurant.getEndpoint() + "/entry/types/" + type, String.class);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
